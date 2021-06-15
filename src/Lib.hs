@@ -174,8 +174,33 @@ sacarVocales :: String -> String
 sacarVocales = filter (not.esVocal) 
 
 esVocal :: Char -> Bool
-esVocal letra = elem letra ["aeiou"]
+esVocal letra = elem letra "aeiou"
 
-unirNombre :: 
+unirNombres :: [Comida] -> String
+unirNombres = concat.map (nombreComida) 
+
+quitarRepetidos :: [String] -> [String]
+quitarRepetidos [] = []
+quitarRepetidos (primerCadena:restoDeCadenas) = (primerCadena:).quitarRepetidos.filter (/=primerCadena) $ restoDeCadenas
+
+unirTodosLosIngredientes :: [Comida] -> [Ingrediente]
+unirTodosLosIngredientes = concat.map (ingredientes) 
+
+compraDeluxe :: Persona -> [Comida] -> Persona
+compraDeluxe persona = comprar persona.superComida.duplicarCostoDeComidas.quitarLasComidasDeMasde 400
+
+quitarLasComidasDeMasde :: Int -> [Comida] -> [Comida]
+quitarLasComidasDeMasde precio = filter (not.valeMenosDe precio) 
+
+duplicarCostoDeComidas :: [Comida] -> [Comida]
+duplicarCostoDeComidas = map (duplicarCosto) 
+
+duplicarCosto :: Comida -> Comida
+duplicarCosto comida = cambiarCostoDeComida (costo comida) comida
+
+
+
+
+
 -- precio : suma de todos, nombre: todos sin vocales, ingredientes : todos sin repetir
 
