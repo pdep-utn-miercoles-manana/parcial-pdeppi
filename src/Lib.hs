@@ -123,5 +123,59 @@ esQueso = empiezaCon "queso"
 aplicarDescuento :: Int -> Comida -> Comida
 aplicarDescuento descuento comida = comida {costo = (costo comida) - descuento}
 
+esoNoEsCocaPapi :: String -> Cupon
+esoNoEsCocaPapi bebida = agregarIngrediente bebida.agregarAlFinalDelNombre "Party"
 
+agregarIngrediente :: Ingrediente -> Comida -> Comida
+agregarIngrediente ingrediente comida = comida {ingredientes = (ingrediente:).ingredientes $ comida}
+
+agregarAlFinalDelNombre :: String -> Comida -> Comida
+agregarAlFinalDelNombre cadena comida = comida{nombreComida = (nombreComida comida)++" "++cadena}
+
+sinTACCis :: Cupon
+sinTACCis = agregarALosIngredientes "libre de gluten" 
+
+agregarALosIngredientes :: String -> Comida -> Comida
+agregarALosIngredientes cadena comida = comida{ingredientes = map (++" "++cadena).ingredientes $ comida}
+
+findeVegetariano :: Cupon
+findeVegetariano comida
+    | not.tieneAlgunaCarne $ comida = aplicarDescuento (div ((*3).costo $ comida) 100) comida
+    | otherwise = comida
+
+largaDistancia :: Cupon
+largaDistancia = cambiarCostoDeComida 50.quitarIngredientesConMasDeXLetras 10
+
+cambiarCostoDeComida :: Int -> Comida -> Comida
+cambiarCostoDeComida cantidad = aplicarDescuento (-cantidad)
+
+quitarIngredientesConMasDeXLetras :: Int -> Comida -> Comida
+quitarIngredientesConMasDeXLetras cantidadDeLetrasMaximas comida = comida {ingredientes = filter (tieneMasDe cantidadDeLetrasMaximas).ingredientes $ comida}
+
+tieneMasDe :: Int -> Ingrediente -> Bool
+tieneMasDe cantidadMaxima = (>cantidadMaxima).length 
+
+-- PARTE C
+
+comprarConCupones :: Persona -> Persona
+comprarConCupones persona = comprar persona.usarCuponesEnComida (comidaFavorita persona).cupones $ persona
+
+usarCuponesEnComida :: Comida -> [Cupon] -> Comida
+usarCuponesEnComida comida listaDeCupones = foldr ($) comida listaDeCupones
+
+superComida :: [Comida] -> Comida
+superComida comidas = Comida {
+    nombreComida = sacarVocales.unirNombres $ comidas,
+    costo = costoTotalDeComidas comidas,
+    ingredientes = quitarRepetidos.unirTodosLosIngredientes $ comidas
+}
+
+sacarVocales :: String -> String
+sacarVocales = filter (not.esVocal) 
+
+esVocal :: Char -> Bool
+esVocal letra = elem letra ["aeiou"]
+
+unirNombre :: 
+-- precio : suma de todos, nombre: todos sin vocales, ingredientes : todos sin repetir
 
