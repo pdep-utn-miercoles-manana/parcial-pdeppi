@@ -144,10 +144,10 @@ findeVegetariano comida
     | otherwise = comida
 
 largaDistancia :: Cupon
-largaDistancia = cambiarCostoDeComida 50.quitarIngredientesConMasDeXLetras 10
+largaDistancia = aumentarCostoDeComida 50.quitarIngredientesConMasDeXLetras 10
 
-cambiarCostoDeComida :: Int -> Comida -> Comida
-cambiarCostoDeComida cantidad = aplicarDescuento (-cantidad)
+aumentarCostoDeComida :: Int -> Comida -> Comida
+aumentarCostoDeComida cantidad = aplicarDescuento (-cantidad)
 
 quitarIngredientesConMasDeXLetras :: Int -> Comida -> Comida
 quitarIngredientesConMasDeXLetras cantidadDeLetrasMaximas comida = comida {ingredientes = filter (tieneMasDe cantidadDeLetrasMaximas).ingredientes $ comida}
@@ -196,11 +196,7 @@ duplicarCostoDeComidas :: [Comida] -> [Comida]
 duplicarCostoDeComidas = map (duplicarCosto) 
 
 duplicarCosto :: Comida -> Comida
-duplicarCosto comida = cambiarCostoDeComida (costo comida) comida
+duplicarCosto comida = aumentarCostoDeComida (costo comida) comida
 
 
-
-
-
--- precio : suma de todos, nombre: todos sin vocales, ingredientes : todos sin repetir
 
