@@ -16,8 +16,10 @@ data Persona = Persona {
 data Comida = Comida {
     nombreComida :: String,
     costo :: Int,
-    ingredientes :: [String]
+    ingredientes :: [Ingrediente]
 } deriving (Show)
+
+type Ingrediente = String
 
 type Cupon = Comida -> Comida
 
@@ -85,4 +87,41 @@ costoTotalDeComidas :: [Comida] -> Int
 costoTotalDeComidas comidas = sum $ map (costo) comidas
 
 -- CUPONES
+
+semanaVegana :: Cupon
+semanaVegana comida
+    | esVegana comida = aplicarDescuento (div (costo comida) 2) comida
+    | otherwise = comida
+
+esVegana :: Comida -> Bool
+esVegana comida = not (tieneAlgunaCarne comida || tieneAlgunTipoDeHuevo comida || tieneAlgunTipoDeQueso comida)
+
+tieneAlgunaCarne :: Comida -> Bool
+tieneAlgunaCarne = alguno esCarne
+
+alguno :: (Ingrediente -> Bool) -> Comida -> Bool
+alguno tipoDeIngrediente = any tipoDeIngrediente.ingredientes
+
+esCarne :: Ingrediente -> Bool
+esCarne  = empiezaCon "carne"
+
+empiezaCon :: String -> String -> Bool
+empiezaCon subcadena = (==subcadena).take (length subcadena)
+
+tieneAlgunTipoDeHuevo :: Comida -> Bool
+tieneAlgunTipoDeHuevo = alguno esHuevo
+
+esHuevo :: Ingrediente -> Bool
+esHuevo = empiezaCon "huevo"
+
+tieneAlgunTipoDeQueso :: Comida -> Bool
+tieneAlgunTipoDeQueso = alguno esQueso
+
+esQueso :: Ingrediente -> Bool
+esQueso = empiezaCon "queso"
+
+aplicarDescuento :: Int -> Comida -> Comida
+aplicarDescuento descuento comida = comida {costo = (costo comida) - descuento}
+
+
 
